@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yaml -o k8s
+    kompose.version: 1.28.0 (HEAD)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nest
+  name: nest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nest
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yaml -o k8s
+        kompose.version: 1.28.0 (HEAD)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/job-board-api-default: "true"
+        io.kompose.service: nest
+    spec:
+      containers:
+        - env:
+            - name: DB_PASSWORD
+              value: temptemp
+            - name: HOST_DB
+              value: database-jobboard-oubaydos.clzr4zomj3s0.us-east-1.rds.amazonaws.com
+          image: oubaydos/tempk8s
+          name: nest
+          ports:
+            - containerPort: 3000
+          resources:
+            limits:
+              cpu: "0.6"
+              memory: "500Mi"
+            requests:
+              cpu: "0.4"
+              memory: "300Mi"
+      restartPolicy: Always
